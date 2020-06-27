@@ -1,0 +1,42 @@
+{% set name = "armadillo" %}
+{% set version = "9.200.7" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: http://sourceforge.net/projects/arma/files/armadillo-{{ version }}.tar.xz
+  sha256: e2787d40bcd46edf70f65ba4efd523ccb8b96a93fdb8f76da6adf1e921cb7df8
+build:
+  number: 0
+  run_exports:
+    - {{ pin_subpackage('armadillo', min_pin='x.x', max_pin='x') }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - ninja  # [win]
+  host:
+    - openblas  
+    - openmp
+  run:
+    - openblas  
+    - openmp
+
+test:
+  commands:
+    - test -f "${PREFIX}/include/armadillo"  # [unix]
+    - test -d "${PREFIX}/include/armadillo_bits"  # [unix]
+
+about:
+  home: http://arma.sourceforge.net
+  license: Apache-2.0
+  license_file: LICENSE.txt
+  summary: Armadillo C++ linear algebra library
+
+extra:
+  recipe-maintainers:
+    - zoq 
