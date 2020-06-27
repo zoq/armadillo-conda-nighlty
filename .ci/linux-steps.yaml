@@ -1,0 +1,23 @@
+steps:
+# Checkout repository
+- checkout: self
+  clean: true
+  fetchDepth: 1
+
+- bash: echo "##vso[task.prependpath]$CONDA/bin"
+  displayName: Add conda to PATH
+
+- bash: >
+    conda install --yes --quiet
+    conda-build
+  displayName: Install conda-build
+
+- bash: >
+    conda build . --no-anaconda-upload -c conda-forge -c zoq
+  displayName: Conda build
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: /usr/share/miniconda/conda-bld/linux-64/ 
+    artifactName: 'armadillo'
+  displayName: 'Publish artifacts'
